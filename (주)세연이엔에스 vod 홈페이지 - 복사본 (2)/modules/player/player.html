@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 플레이어 - 스마트 안전관리 교육센터</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./player.css">
+    <!-- 💡 Supabase 연동 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://ymzbfkinxxutwmghjppg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltemJma2lueHh1dHdtZ2hqcHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzY0MDgsImV4cCI6MjEwNTExMjQwOH0.6t41urWoIu5ORhSrrCQaxYskbhlk_rabNvoI0Gu_7k4';
+        window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
+</head>
+<body>
+    <header class="player-header">
+        <div class="header-left">
+            <i class="fa-solid fa-graduation-cap"></i> <span id="courseTitleDisplay">강의 로딩 중...</span>
+        </div>
+        <div class="header-right">
+            <span class="progress-label">전체 진행률</span> <span class="progress-percent" id="totalProgressText">0%</span>
+        </div>
+    </header>
+
+    <div class="player-body">
+        <div class="video-section">
+            <div class="video-wrapper">
+                <video id="videoPlayer" controls autoplay>
+                    <source id="videoSource" src="" type="video/mp4">
+                    브라우저가 비디오 태그를 지원하지 않습니다.
+                </video>
+            </div>
+            
+            <div class="video-controls">
+                <div class="control-left">
+                    <span class="label"><i class="fa-solid fa-chart-line"></i> 차시 진도율</span>
+                    <span class="percent" id="lessonProgressText">0.0%</span>
+                    <div class="progress-bar"><div class="fill" id="lessonProgressBar"></div></div>
+                </div>
+                
+                <div class="control-center">
+                    <button class="btn-nav" onclick="moveChapter(-1)">이전</button>
+                    <span class="page-indicator" id="pageIndicator">01 / 04</span>
+                    <button class="btn-nav blue" onclick="moveChapter(1)">다음</button>
+                </div>
+                
+                <div class="control-right"></div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-list"></i> 강의 목차 ( <span id="currentLessonNum">1</span> / <span id="totalLessonCount">0</span> 차시 )
+            </div>
+            <div class="chapter-list" id="chapterListContainer"></div>
+        </div>
+    </div>
+
+    <script src="./player.js" defer></script>
+</body>
+</html>

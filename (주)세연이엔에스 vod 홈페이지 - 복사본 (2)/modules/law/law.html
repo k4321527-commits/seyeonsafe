@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스마트 안전관리 교육센터 - 법정필수교육</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../common/supabase.js"></script>
+    <style>
+        body {
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', sans-serif;
+            color: #333;
+        }
+        .law-image-wrap {
+            max-width: 1300px; /* 이미지가 시원하게 보이도록 크기 확장 */
+            margin: 40px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .law-image-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* ==================== 모바일 반응형 추가 (768px 이하) ==================== */
+        @media (max-width: 768px) {
+            .law-image-wrap {
+                margin: 20px auto; /* 💡 모바일에서는 위아래 여백을 절반으로 줄여서 시원하게 */
+                padding: 0 10px;   /* 💡 좌우 여백도 살짝 줄여서 이미지가 화면에 꽉 차게 */
+            }
+            .law-image-wrap img {
+                border-radius: 4px; /* 모바일 화면 비율에 맞춰 테두리 둥근 정도 완화 */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 헤더 영역 ==================== -->
+    <header>
+        <div class="top-ribbon">
+            <div class="inner ribbon-wrap">
+                <div class="ribbon-left"></div>
+                <div class="ribbon-right">
+                    <a href="https://seyeon-ens.co.kr/" target="_blank" style="display: flex; align-items: center; gap: 5px; font-weight: 700; color: #0056b3; text-decoration: none; cursor: pointer;">
+                        (주)세연이앤에스 <i class="fa-solid fa-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="inner header-main">
+            <div class="header-logo-group">
+                <!-- 💡 메인 페이지로 가는 경로 수정 (../../) -->
+                <a href="../../index.html" class="logo">
+                    <span class="logo-text">(주)세연이앤에스</span>
+                </a>
+            </div>
+            
+            <div class="header-utils-gov" id="headerUtils">
+                <!-- 💡 로그인/회원가입 경로 수정 (../) -->
+                <a href="../login/login.html"><i class="fa-solid fa-right-to-bracket"></i> 로그인</a>
+                <a href="../sign/sign.html"><i class="fa-solid fa-user-plus"></i> 회원가입</a>
+            </div>
+        </div>
+
+        <div class="header-gnb">
+            <div class="inner">
+                <ul class="gnb-menu">
+                    <!-- 💡 서브페이지 간 이동 경로 수정 (../) -->
+                    <li><a href="../safe/safe.html">안전보건교육</a></li>
+                    <li><a href="../law/law.html">법정필수교육</a></li>
+                    <li><a href="../mypage/mypage.html?tab=apply">수강신청하기</a></li>
+                    <li><a href="../mypage/mypage.html">나의 강의실</a></li>
+                    
+                    <li id="adminMenu" style="display: none;">
+                        <a href="../admin/admin.html" style="color:#d32f2f;"><i class="fa-solid fa-gear"></i> 시스템 관리자</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== 중앙 이미지 본문 영역 ==================== -->
+    <main>
+        <div class="law-image-wrap">
+            <img src="../../assets/법정필수교육.png" alt="법정필수교육 안내">
+        </div>
+    </main>
+
+    <!-- ==================== 푸터 영역 ==================== -->
+    <footer>
+        <div class="footer-partners">
+            <div class="inner partners-wrap">
+                <!-- 💡 로고 이미지 경로 수정 (../../assets/) -->
+                
+                <a href="https://www.moel.go.kr" target="_blank" class="partner-item">
+                    <img src="../../assets/고용노동부_국_좌우.png" alt="고용노동부" onerror="this.outerHTML='<span class=\'partner-text\'>고용노동부</span>'">
+                </a>
+                
+                <a href="https://www.hrdkorea.or.kr" target="_blank" class="partner-item">
+                    <img src="../../assets/시그니처 상하조합 국문.png" alt="한국산업인력공단" onerror="this.outerHTML='<span class=\'partner-text\'>한국산업인력공단</span>'">
+                </a>
+                
+                <a href="https://www.comwel.or.kr" target="_blank" class="partner-item">
+                    <img src="../../assets/시그니처_국문 가로조합.png" alt="근로복지공단" onerror="this.outerHTML='<span class=\'partner-text\'>근로복지공단</span>'">
+                </a>
+                
+                <a href="https://www.kosha.or.kr" target="_blank" class="partner-item">
+                    <img src="../../assets/산업안전보건공단.png" alt="안전보건공단" onerror="this.outerHTML='<span class=\'partner-text\'>안전보건공단</span>'">
+                </a>
+                
+            </div>
+        </div>
+
+        <div class="inner footer-main-content">
+            <div class="footer-info-left">
+                <div class="footer-logo">
+                    <span>(주)세연이앤에스</span>
+                </div>
+                <div class="footer-texts">
+                    <p>주소 : 광주광역시 북구 하서로 672번길 18-17 (지동 806-9) | 대표자 : 김강 | 사업자등록번호 : 409-86-53125</p>
+                    <p>전화번호 : 062-511-7741 | 팩스 : 062-576-7741 | 이메일 : seyeon7741@daum.net</p>
+                    <p class="copyright">COPYRIGHT(C) 세연이앤에스 All Rights Reserved.</p>
+                </div>
+            </div>
+            <div class="footer-info-right">
+                <div class="cscenter-title">관리자 문의</div>
+                <div class="cscenter-number">062-511-7741</div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

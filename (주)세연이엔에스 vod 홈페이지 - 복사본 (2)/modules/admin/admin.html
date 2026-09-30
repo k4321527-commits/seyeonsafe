@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(주)세연이앤에스 교육센터 - 시스템 관리자</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="./admin.css"> 
+</head>
+<body>
+    <header style="background-color: #fff; border-bottom: 1px solid #eaeaea;">
+        <div class="top-ribbon">
+            <div class="inner ribbon-wrap">
+                <div class="ribbon-left"></div>
+                <div class="ribbon-right"><span style="font-weight: 700; color: #0056b3;">(주)세연이앤에스 교육센터</span></div>
+            </div>
+        </div>
+        <div class="inner header-main">
+            <div class="header-logo-group">
+                <a href="../../index.html" class="logo"><span class="logo-text">(주)세연이앤에스</span></a>
+                <span style="background: #e11d48; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; margin-left: 10px;">관리자용</span>
+            </div>
+            <div class="header-utils-gov">
+                <a href="../../index.html" style="color: #4b5563; text-decoration: none; font-size: 14px; font-weight: 600;"><i class="fa-solid fa-house"></i> 홈으로</a>
+                <a href="#" onclick="handleLogout(event)" style="margin-left: 15px; color: #475569; text-decoration: none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="inner admin-container">
+        <aside class="admin-sidebar">
+            <h3>관리자 메뉴</h3>
+            <ul class="admin-menu">
+                <li><a class="active" onclick="switchTab('member', this)"><i class="fa-solid fa-users"></i> 회원 관리</a></li>
+                <li><a onclick="switchTab('enroll', this)"><i class="fa-solid fa-user-check"></i> 수강 등록</a></li>
+                <li><a onclick="switchTab('course', this)"><i class="fa-solid fa-video"></i> 강의 영상 등록</a></li>
+                <li><a onclick="switchTab('stats', this)"><i class="fa-solid fa-chart-pie"></i> 수강 통계</a></li>
+            </ul>
+        </aside>
+
+        <div class="admin-content">
+            <!-- 1. 회원 관리 탭 -->
+            <div id="tab-member" class="tab-pane active">
+                <div class="section-header"><h2>회원 관리</h2></div>
+                <div class="admin-form-box">
+                    <h3 style="font-size: 16px; margin-bottom: 20px; font-weight: 800;"><i class="fa-solid fa-user-plus"></i> 회원 정보 등록/수정</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>역할 선택 <span class="req">*</span></label>
+                            <select id="regRole">
+                                <option value="user">일반 사용자</option>
+                                <option value="admin">시스템 관리자</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>로그인 ID <span class="req">*</span></label>
+                            <input type="text" id="regId" placeholder="아이디 입력 (예: kss1234)">
+                        </div>
+                        <div class="form-group">
+                            <label>사용자명 <span class="req">*</span></label>
+                            <input type="text" id="regName" placeholder="이름 입력">
+                        </div>
+                        <div class="form-group">
+                            <label>휴대전화</label>
+                            <div class="inline-group">
+                                <input type="text" id="regPhone1" placeholder="010" maxlength="3"><span class="dash">-</span>
+                                <input type="text" id="regPhone2" placeholder="0000" maxlength="4"><span class="dash">-</span>
+                                <input type="text" id="regPhone3" placeholder="0000" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>비밀번호 <span class="req">*</span></label>
+                            <input type="password" id="regPw" placeholder="비밀번호 입력">
+                        </div>
+                        <div class="form-group">
+                            <label>비밀번호 확인 <span class="req">*</span></label>
+                            <input type="password" id="regPwConfirm" placeholder="비밀번호 재입력">
+                        </div>
+                        <div class="form-group">
+                            <label>생년월일 및 성별</label>
+                            <div class="inline-group">
+                                <input type="text" id="regBirth" maxlength="8" placeholder="예: 20020603" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                <label style="margin: 0 10px;"><input type="radio" name="regGender" value="M" checked> 남</label>
+                                <label><input type="radio" name="regGender" value="F"> 여</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group" style="justify-content: flex-end; align-items: center; border-top: 1px solid #eaeaea; margin-top: 30px; padding-top: 20px;">
+    <button id="registerBtn" class="btn btn-primary" onclick="registerNewMember()">저장 / 등록</button>
+</div>
+                </div>
+
+                <h3 style="font-size: 16px; margin-bottom: 15px; font-weight: 800;">등록된 회원 목록</h3>
+                <table class="data-table">
+                    <thead><tr><th>회원ID</th><th>사용자명</th><th>휴대전화</th><th>가입일</th><th>관리</th></tr></thead>
+                    <!-- 💡 JS가 자동으로 데이터를 밀어넣을 빈 껍데기(tbody) -->
+                    <tbody id="memberTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 2. 수강 등록 탭 -->
+            <div id="tab-enroll" class="tab-pane">
+                <div class="section-header">
+                    <h2>수강 등록</h2>
+                    <p style="color: #666; font-size: 14px; margin-top: 5px;">수강생에게 직접 강좌를 할당합니다.</p>
+                </div>
+                <div class="admin-form-box">
+                    <h3 style="font-size: 16px; margin-bottom: 20px; font-weight: 800;"><i class="fa-solid fa-user-check"></i> 간편 수강 등록</h3>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>할당할 강좌 선택 <span class="req">*</span></label>
+                            <div style="display: flex; gap: 10px; max-width: 100%;">
+                                <select id="assignCategorySelect" onchange="updateAssignCourseSelect()" style="flex: 1; height: 46px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;">
+                                    <option value="">-- 분류 먼저 선택 --</option>
+                                    <option value="안전보건교육">안전보건교육</option>
+                                    <option value="법정필수교육">법정필수교육</option>
+                                    <option value="기타">기타</option>
+                                </select>
+                                <select id="assignCourseSelect" style="flex: 2; height: 46px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;">
+                                    <option value="">-- 강좌를 선택하세요 --</option>
+                                </select>
+                            </div>
+                        </div>
+                       <div class="form-group" style="grid-column: span 2;">
+    <label>수강생 아이디 입력 <span class="req">*</span></label>
+    <div style="display: flex; gap: 10px; align-items: center; max-width: 100%;">
+        <input type="text" id="assignUserIds" placeholder="아이디를 입력하세요 (쉼표로 여러 명 등록 가능)" style="flex: 1; height: 46px; padding: 0 15px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; outline: none;">
+        <button class="btn-clean-outline" style="white-space: nowrap; color: #16a34a; border-color: #16a34a;" onclick="openMemberListModal()"><i class="fa-solid fa-address-book"></i> 회원 명단</button>
+        <button class="btn-clean-outline" style="white-space: nowrap;" onclick="assignCourseToUsers()">수강 등록</button>
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 강의 영상 등록 탭 -->
+            <div id="tab-course" class="tab-pane">
+                <div id="courseListView">
+                    <div class="section-header">
+                        <h2>강의 영상 등록</h2>
+                        <p style="color: #666; font-size: 14px; margin-top: 5px;">강좌명을 입력해 방을 만들고, 클릭해서 차시와 영상 주소를 추가하세요.</p>
+                    </div>
+                    
+                    <div class="admin-form-box" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+                        <div style="display: flex; gap: 10px; align-items: center; max-width: 100%;">
+                            <select id="newCourseCategory" style="width: 180px; height: 46px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0 10px; outline: none;">
+                                <option value="안전보건교육">안전보건교육</option>
+                                <option value="법정필수교육">법정필수교육</option>
+                                <option value="기타">기타</option>
+                            </select>
+                            <input type="text" id="newCourseName" placeholder="강좌명 입력 (예: 하반기 특별교육)" style="flex: 1; height: 46px; padding: 0 15px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+                            <button class="btn-clean-outline" style="white-space: nowrap;" onclick="createNewCourse()"><i class="fa-solid fa-plus"></i> 생성</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                        <button class="btn-clean-outline" style="height: 38px; padding: 0 15px; border-color: #0d4a96; background: #0d4a96; color: #fff;" onclick="filterCourseList('전체', this)">전체보기</button>
+                        <button class="btn-clean-outline" style="height: 38px; padding: 0 15px;" onclick="filterCourseList('안전보건교육', this)">안전보건교육</button>
+                        <button class="btn-clean-outline" style="height: 38px; padding: 0 15px;" onclick="filterCourseList('법정필수교육', this)">법정필수교육</button>
+                        <button class="btn-clean-outline" style="height: 38px; padding: 0 15px;" onclick="filterCourseList('기타', this)">기타</button>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th style="width: 70px;">번호</th><th style="width: 130px;">분류</th><th class="text-left">강좌명 (클릭하여 차시 관리)</th><th style="width: 120px;">등록된 차시</th><th style="width: 80px;">관리</th></tr></thead>
+                        <tbody id="courseTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div id="courseDetailView" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #111; padding-bottom: 15px;">
+                        <div>
+                            <span id="detailCourseCategory" style="display: inline-block; background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 700; margin-bottom: 8px;">분류</span>
+                            <h2 id="detailCourseTitle" style="margin: 0; font-size: 22px; color: #0d4a96;">강좌명</h2>
+                        </div>
+                        <button class="btn btn-outline" onclick="closeCourseDetail()"><i class="fa-solid fa-arrow-left"></i> 목록으로</button>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+        <label>강좌 썸네일 이미지 (드래그앤드롭 업로드)</label>
+        <div id="dropZone" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 25px; text-align: center; background: #f8fafc; cursor: pointer; transition: 0.2s;">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 28px; color: #0d4a96; margin-bottom: 8px;"></i>
+            <p style="margin: 0; font-size: 14px; font-weight: 700; color: #475569;">여기로 썸네일 이미지(.png, .jpg)를 드래그해서 놓으세요</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">또는 클릭하여 파일 직접 선택</p>
+            <input type="file" id="thumbnailFile" accept="image/*" style="display: none;">
+        </div>
+        <div id="thumbPreviewWrap" style="margin-top: 10px; display: none; align-items: center; gap: 10px;">
+            <img id="thumbPreviewImg" src="" alt="썸네일 미리보기" style="max-height: 100px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <button type="button" class="btn btn-outline btn-sm" style="color: #e11d48; border-color: #fca5a5;" onclick="removeThumbnail()">이미지 제거</button>
+        </div>
+    </div>
+
+                    <div id="chapterListContainer"></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button class="btn-clean-outline" onclick="addChapterRow()"><i class="fa-solid fa-plus" style="margin-right:5px;"></i> 차시 칸 추가</button>
+                        <button class="btn btn-primary" style="padding: 12px 40px; font-size: 16px;" onclick="saveChapters()">이 강좌 정보 저장하기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 수강 통계 탭 -->
+            <div id="tab-stats" class="tab-pane">
+                <div class="section-header">
+                    <h2>📊 강좌별 수강 현황 통계</h2>
+                    <p style="color: #666; font-size: 14px; margin-top: 5px;">인원수를 클릭하면 해당 상태의 <b>상세 회원 명단</b>을 확인할 수 있습니다.</p>
+                    <button class="btn btn-outline btn-sm" onclick="loadAdminStatistics()"><i class="fa-solid fa-rotate-right"></i> 실시간 새로고침</button>
+                </div>
+                <div style="background: #fff; border: 1px solid #e1e8f0; border-radius: 8px; overflow: hidden; margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>분류</th>
+                                <th class="text-left">과정명</th>
+                                <th>총 신청자</th>
+                                <th>미수강 (0%)</th>
+                                <th>학습 중 (1~99%)</th>
+                                <th>수강 완료 (100%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminStatsBody">
+                            <tr>
+                                <td colspan="6" style="padding: 40px; color: #64748b;">데이터를 불러오는 중입니다...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ================= 모달 팝업 영역 ================= -->
+    <div class="modal-overlay" id="enrollDrilldownModal">
+        <div class="modal-content" style="width: 800px;">
+            <div class="modal-header">
+                <h3 id="drilldownModalTitle">상세 명단</h3>
+                <button class="close-btn" onclick="closeModal('enrollDrilldownModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="max-height: 500px; overflow-y: auto;">
+                <table class="data-table">
+                    <thead><tr><th>아이디</th><th>이름</th><th>학습 상태</th><th>진도율</th></tr></thead>
+                    <tbody id="drilldownTableBody"></tbody>
+                </table>
+            </div>
+            <div class="btn-group" style="justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="closeModal('enrollDrilldownModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteMemberModal">
+        <div class="modal-content" style="width: 500px;"><div class="modal-header"><h3>회원 정보 삭제</h3><button class="close-btn" onclick="closeModal('deleteMemberModal')"><i class="fa-solid fa-xmark"></i></button></div>
+            <p style="font-size: 16px; margin-bottom: 25px; line-height: 1.5;"><strong id="deleteTargetName" style="color: #e11d48; font-size: 18px;">사용자명</strong> 님을 정말 삭제하시겠습니까?<br><span style="color: #666; font-size: 14px;">(삭제 후에는 해당 회원의 모든 수강 이력이 함께 지워집니다.)</span></p>
+            <div class="form-group"><label>삭제 사유 입력 <span class="req">*</span></label><input type="text" id="deleteReasonInput" placeholder="삭제 사유를 적어주세요 (예: 퇴사, 부서 이동 등)" style="max-width: 100%;"></div>
+            <div class="btn-group" style="justify-content: flex-end; margin-top: 30px;"><button class="btn btn-outline" onclick="closeModal('deleteMemberModal')">취소</button><button class="btn btn-danger" style="padding: 12px 24px; font-size: 14px; border-radius: 6px;" onclick="confirmDeleteMember()">최종 삭제하기</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="memberListModal">
+        <div class="modal-content" style="width: 700px;">
+            <div class="modal-header">
+                <h3>등록된 전체 회원 명단 (다중 선택)</h3>
+                <button class="close-btn" onclick="closeModal('memberListModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;"><input type="checkbox" id="selectAllCheckbox" onclick="toggleAllMembers(this)"></th>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th>생년월일</th>
+                        <th>휴대폰번호</th>
+                    </tr>
+                </thead>
+                <tbody id="memberListTableBody"></tbody>
+            </table>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid #eaeaea; padding-top: 15px;">
+                <span id="selectedCountText" style="font-size: 14px; font-weight: 700; color: #0d4a96;">선택된 회원: 0명</span>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" onclick="closeModal('memberListModal')">닫기</button>
+                    <button class="btn btn-primary" onclick="applySelectedMembersToInput()">선택한 회원 일괄 적용</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase CDN 및 클라이언트 초기화 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://ymzbfkinxxutwmghjppg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InltemJma2lueHh1dHdtZ2hqcHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzY0MDgsImV4cCI6MjEwNTExMjQwOH0.6t41urWoIu5ORhSrrCQaxYskbhlk_rabNvoI0Gu_7k4';
+        
+        // 💡 핵심 해결: 임시 클라이언트를 만들 수 있도록 원래 기능을 안전하게 보관!
+        window.supabaseLib = window.supabase; 
+        
+        // 기존처럼 클라이언트 생성 (기존 기능 유지)
+        window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
+    <script src="./admin.js"></script>
+</body>
+</html>
+
